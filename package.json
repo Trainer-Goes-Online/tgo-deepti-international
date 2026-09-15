@@ -1,0 +1,23 @@
+{
+  "name": "tgo-deepti-international",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deepti INTERNATIONAL: the VSL funnel with no payment, the assessment free. Next.js 15 + React 19, SDP component system, Garnet & Gold skin. Fork of tgo-deepti.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.5.18",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.6.3"
+  }
+}

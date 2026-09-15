@@ -1,0 +1,46 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (DO NOT COMMIT)
+.env*.local
+.env
+# .env.example holds no secrets (empty values plus setup notes), so the usual
+# convention is to commit it. Excluded here on Atul's instruction 2026-09-09.
+# Consequence: whoever sets up a deploy has no in-repo manifest of the 15
+# required vars, so the file has to reach them another way.
+.env.example
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.vscode
+.idea
