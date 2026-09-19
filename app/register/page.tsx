@@ -40,6 +40,7 @@ import { collectSignals } from '@/lib/client-signals';
 import { trackAddToCart, trackBeginCheckout } from '@/lib/track';
 import { SiteFooter } from '@/components/shared/SiteFooter';
 import {
+  AlertIcon,
   ArrowRightIcon,
   CaretDownIcon,
   CheckIcon,
@@ -113,6 +114,15 @@ export default function RegisterPage() {
   const [touched, setTouched] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState('');
+  /* The handoff acknowledgement, ported from the India checkout.
+     THE REASON IS STRONGER HERE, not weaker, even though nothing is paid.
+     On the India build a buyer who closes the tab has at least parted with
+     ₹97 and has a reason to come back. Here they have parted with nothing,
+     so a registration that never becomes a booking is the leak this whole
+     funnel is built to avoid (see the note at the top of /book-a-call).
+     Asking for the tick is what makes "you are not finished yet" land
+     before they submit rather than after. */
+  const [ack, setAck] = useState(false);
 
   /* ARRIVAL. GA4 gets begin_checkout, Meta gets AddToCart.
      The conversion deliberately does NOT fire here: it waits for the
@@ -155,7 +165,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setTouched(true);
     setFailed('');
-    if (!valid || busy) return;
+    if (!valid || !ack || busy) return;
     setBusy(true);
 
     try {
@@ -205,13 +215,40 @@ export default function RegisterPage() {
           </div>
 
           <div className="pay-grid">
-            <form className="pay-card" onSubmit={register} noValidate>
+            <form id="reg-form" className="pay-card" onSubmit={register} noValidate>
               <p className="pay-eyebrow">YOUR DETAILS</p>
               <h2>Where should we reach you?</h2>
               <p className="pay-hint">
                 Deepti&rsquo;s team uses these to arrange your assessment and to
                 send you your booking details.
               </p>
+
+              {/* THE ONE INSTRUCTION THAT HAS TO LAND BEFORE SUBMITTING.
+
+                  THE INDIA WORDING DOES NOT TRANSFER. There the note says
+                  "don't close this page after paying, wait up to 10 seconds",
+                  because Razorpay's handler is what navigates and the payment
+                  sheet takes that long to settle. Neither fact is true here:
+                  nothing is paid, and the gap is one call to /api/register.
+                  Reusing that sentence would describe a wait that does not
+                  happen and a payment that does not exist.
+
+                  What IS true, and is the whole point of this page, is that
+                  registering is not finishing. The slot is. */}
+              <div className="pay-note" role="note">
+                <span className="pay-note-chip" aria-hidden>
+                  <AlertIcon size={13} />
+                </span>
+                <p>
+                  <strong>
+                    Registering does not book your assessment.
+                  </strong>{' '}
+                  The moment you submit this form you will be taken to a
+                  calendar to pick your date and time. Your assessment is only
+                  confirmed once you have a slot, so please don&rsquo;t close
+                  this page before you choose one.
+                </p>
+              </div>
 
               <div className="pay-fields">
                 {/* First and last are SEPARATE fields, not one "Full name"
@@ -302,10 +339,34 @@ export default function RegisterPage() {
                 </label>
               </div>
 
+              {/* The same promise as the note above, asked for rather than
+                  told, at the moment of submitting. Its own line of error text
+                  and not the fields' one: "add your name and a valid number"
+                  is useless feedback to someone whose only miss is the tick. */}
+              <label className="pay-ack">
+                <input
+                  type="checkbox"
+                  checked={ack}
+                  onChange={(e) => setAck(e.target.checked)}
+                  aria-invalid={(touched && !ack) || undefined}
+                />
+                <span>
+                  I understand that I need to{' '}
+                  <strong>pick a date and time on the next page</strong> to
+                  confirm my assessment.
+                </span>
+              </label>
+
               {touched && !valid && (
                 <p className="pay-error">
                   Please add your name, a working email, your city and a valid
                   number.
+                </p>
+              )}
+              {touched && valid && !ack && (
+                <p className="pay-error">
+                  Please tick the box above so we know to expect you on the
+                  booking page.
                 </p>
               )}
               {failed && <p className="pay-error">{failed}</p>}
@@ -357,6 +418,44 @@ export default function RegisterPage() {
           </div>
         </div>
       </section>
+
+      {/* ── THE MOBILE DOCKED BAR (2026-09-19, Atul) ──────────────────────
+          Below 1000px the layout is one column and the summary column stops
+          being sticky, so the action scrolls away while the fields are being
+          filled. This puts it back.
+
+          IT SUBMITS, IT DOES NOT LINK. The landing page's sticky bar sends
+          someone to /register, which is where this reader already is. This
+          one is a real submit button for the form via `form="reg-form"`, so
+          it routes through the same handler, the same validation and the same
+          busy guard: one path, not two to keep in step. It has to live
+          OUTSIDE the form to be position:fixed without inheriting its
+          stacking context, which is exactly what the `form` attribute is for.
+
+          NO PRICE ON THIS BAR, unlike the India build's. There the bar's
+          left-hand figure is the ₹97 total, because once the summary has
+          scrolled off it is the only place the price appears. Nothing is
+          charged here, so a figure would have to be invented to fill the
+          space. The label carries the offer instead. */}
+      <div className="pay-stuck">
+        <div className="pay-stuck-inner">
+          <span className="pay-stuck-fig">
+            <span className="pay-stuck-cap">Your assessment</span>
+            <strong>Free</strong>
+          </span>
+          <button
+            type="submit"
+            form="reg-form"
+            className="pay-stuck-go"
+            disabled={busy}
+          >
+            <span>{busy ? 'Saving your details' : 'Claim my free assessment'}</span>
+            <span className="arrow" aria-hidden>
+              <ArrowRightIcon size={12} />
+            </span>
+          </button>
+        </div>
+      </div>
 
       <SiteFooter />
     </div>

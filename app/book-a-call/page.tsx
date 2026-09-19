@@ -1,10 +1,11 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { SiteFooter } from '@/components/shared/SiteFooter';
 import { business } from '@/lib/site';
 import { asset } from '@/components/shared/asset-version';
+import { AlertIcon, WhatsappIcon } from '@/components/shared/icons';
 import { trackBookingConfirmed } from '@/lib/track';
 
 /**
@@ -66,18 +67,31 @@ import { trackBookingConfirmed } from '@/lib/track';
  * NO-BRAINER pass.
  */
 
-/* Client-supplied embed snippet, 2026-09-09. Three things in it corrected
-   guesses made when only the share link was known:
-     · the loader is /embed-link/embed.js, not /embed/embed.js
-     · the api is NAMESPACED: Cal("init", "default", ...) then Cal.ns.default(...)
-     · the event slug is 1-on-1-health-consultation
-   All three are why the calendar would not have appeared before. */
-const CAL_ORIGIN = (process.env.NEXT_PUBLIC_CAL_ORIGIN ?? 'https://cal.id').trim();
-const CAL_LINK = (
-  process.env.NEXT_PUBLIC_CAL_LINK ?? 'deepti-sherawat/1-on-1-health-consultation'
-).trim();
-const CAL_NS = 'default';
-const CAL_URL = `${CAL_ORIGIN.replace(/\/$/, '')}/${CAL_LINK.replace(/^\//, '')}`;
+/* ── THE BOOKING LINK (cal.com, from the client's snippet 2026-09-19) ───
+   ONE line to change if the handle or event ever changes.
+
+   IT IS ITS OWN EVENT, not the India one. The slug ends
+   `-international`, so this funnel's bookings land on a separate cal.com
+   event type with its own availability. That matters more here than it
+   looks: the audience is USA, Canada, UK, Australia and the Gulf, so the
+   hours this event offers are the whole difference between a bookable
+   calendar and an empty one.
+
+   Moved off cal.id on 2026-09-19. Note for any future move: the loader
+   path is not the same on every Cal instance (cal.id served it at
+   /embed-link/embed.js), so check it rather than assuming an origin swap
+   is enough. That was the whole of the cal.id breakage. */
+const CAL_LINK = 'deeptisherawat/1-on-1-health-consultation-international';
+
+/** The embed app. The script and `Cal('init')` both use this host. */
+const CAL_ORIGIN = 'https://app.cal.com';
+
+/** cal.com namespaces per EVENT, so the namespace IS the slug. */
+const CAL_NS = CAL_LINK.split('/')[1];
+
+/** The public booking page, for the "calendar not showing?" fallback only.
+ *  Deliberately cal.com and not the app subdomain: this one is human-facing. */
+const CAL_URL = `https://cal.com/${CAL_LINK}`;
 
 /* Cal's own loader, verbatim from the snippet apart from the url being read
    from CAL_ORIGIN. It defines window.Cal as a QUEUE straight away and appends
@@ -87,10 +101,15 @@ type CalQueue = ((...args: unknown[]) => void) & {
   loaded?: boolean;
   ns?: Record<string, (...args: unknown[]) => void>;
   q?: unknown[][];
+  config?: { forwardQueryParams?: boolean };
 };
-function loadCal(origin: string) {
+/* Takes the FULL script url, not an origin. It used to build the path itself,
+   which only worked while every Cal instance served the loader at the same
+   place: cal.id uses /embed-link/embed.js and cal.com uses /embed/embed.js, so
+   a derived path is a guess that silently 404s on the wrong host. */
+function loadCal(scriptSrc: string) {
   const C = window as unknown as { Cal?: CalQueue; document: Document };
-  const A = `${origin.replace(/\/$/, '')}/embed-link/embed.js`;
+  const A = scriptSrc;
   const L = 'init';
   const p = (a: { q?: unknown[][] }, ar: unknown[]) => {
     (a.q = a.q || []).push(ar);
@@ -125,6 +144,30 @@ function loadCal(origin: string) {
     };
   return C.Cal as CalQueue;
 }
+
+/* ── THE SLOT-FALLBACK LINKS ───────────────────────────────────────────
+   Built from lib/site.ts rather than typed, so the number and address in
+   the block below can never drift from the ones on the legal pages and in
+   the footer.
+
+   wa.me wants bare digits with no plus and no spaces; phoneE164 carries the
+   plus, so it is stripped here rather than a second literal being kept. */
+const WA_DIGITS = business.phoneE164.replace(/\D/g, '');
+const PHONE_DISPLAY = `+91 ${business.phone.slice(0, 5)} ${business.phone.slice(5)}`;
+
+/* THE COPY DIFFERS FROM THE INDIA BUILD, and it has to. There it opens
+   "you have already paid, and your seat is reserved". Nothing is paid on
+   this funnel, so that sentence would be describing a transaction that did
+   not happen. The reassurance it carries is still true and still needed
+   (they registered, the slot is held), so it is re-stated honestly rather
+   than dropped: the fear at this moment is "have I lost my place", and the
+   answer is no either way. */
+const RESCUE_WA_TEXT = encodeURIComponent(
+  "Hi Deepti, I've registered for my assessment but none of the listed slots work for me. My details: Name: | Email: | Phone: | Preferred day and time:",
+);
+const RESCUE_MAILTO = `mailto:${business.email}?subject=${encodeURIComponent(
+  'Assessment booking: preferred slot request',
+)}&body=${encodeURIComponent('Name:\nEmail:\nPhone:\nPreferred day and time:\n')}`;
 
 /* Inside the calendar card, under the embed: the three things a person
    hesitating over a time slot is actually wondering. */
@@ -179,6 +222,33 @@ function BookACall() {
   const leadId = useSearchParams().get('r') ?? '';
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading');
 
+  /* ── THE EMBED BOOTS ONCE, AND ONLY ONCE (2026-09-19) ────────────────
+     Ported from the India build, where this was a live bug.
+
+     Cal's `inline` command MOUNTS an embed into #dp-cal. Calling it twice
+     does not refresh the first one, it puts a second instance in the same
+     container, and the two then fight over what the container shows: one
+     advances to the questions after a slot is tapped, the other re-renders
+     the month view underneath it. What the visitor sees is the form appear
+     and then snap straight back to slot selection, every time.
+
+     It was being called twice. reactStrictMode is on, and in development
+     StrictMode deliberately runs every effect, cleans it up and runs it
+     AGAIN to surface exactly this class of bug. The cleanup here only
+     cleared the poll; it never tore the embed down, so the second run
+     mounted a second embed on top of the first.
+
+     The ref survives StrictMode's remount of the same component instance,
+     so the second run skips the boot. A genuine unmount and remount gets a
+     fresh component, a fresh ref, and a correct re-boot. */
+  const calBooted = useRef(false);
+
+  /* The success handler is registered once, so it must not close over a
+     stale lead id. A ref is read at fire time; the value still comes from
+     the URL. */
+  const leadRef = useRef(leadId);
+  leadRef.current = leadId;
+
   useEffect(() => {
     let cancelled = false;
     /* The embed reports nothing on success or failure, so the only honest
@@ -196,23 +266,48 @@ function BookACall() {
       }
     }, 300);
 
+    /* See calBooted above. The poll still runs on every invocation, because
+       it only reads the DOM and drives the readiness message, but the embed
+       itself is mounted exactly once. */
+    if (calBooted.current) {
+      return () => {
+        cancelled = true;
+        window.clearInterval(poll);
+      };
+    }
+    calBooted.current = true;
+
     try {
-      const Cal = loadCal(CAL_ORIGIN);
+      const Cal = loadCal(`${CAL_ORIGIN}/embed/embed.js`);
       Cal('init', CAL_NS, { origin: CAL_ORIGIN });
+
+      /* From the client's cal.com snippet. It forwards the PARENT page's query
+         string into the embed, which is what carries ?r=<lead_id> across the
+         seam. The booking-success handler below reads that id from a ref on
+         our side, so this is belt-and-braces rather than load-bearing, but it
+         is in the supplied snippet and costs nothing. */
+      Cal.config = Cal.config || {};
+      Cal.config.forwardQueryParams = true;
+
       const ns = Cal.ns![CAL_NS];
 
       ns('inline', {
         elementOrSelector: '#dp-cal',
-        config: { layout: 'month_view' },
+        /* useSlotsViewOnSmallScreen is from the client's snippet: on a narrow
+           screen Cal leads with the time list instead of the month grid, which
+           is the right first thing to show when the grid would be unreadable. */
+        config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true' },
         calLink: CAL_LINK,
       });
 
       ns('ui', {
-        /* Cal's generated snippet ships its default blue. Gold is this
-           funnel's only action colour, so it is the only thing inside the
-           embed that should look clickable either. Light is forced: the page
-           is cream, and Cal would otherwise follow the visitor's OS theme and
-           drop a dark calendar into the middle of it. */
+        /* KEPT ACROSS THE cal.com MOVE, deliberately. The client's cal.com
+           snippet carries no cssVarsPerTheme and no theme at all, so taking it
+           verbatim would hand the embed back to Cal's default blue and to the
+           visitor's OS theme. Gold is this funnel's only action colour, so it
+           is the only thing inside the embed that should look clickable
+           either; and light is forced because the page is cream and a dark
+           calendar would otherwise drop into the middle of it. */
         cssVarsPerTheme: { light: { 'cal-brand': '#E0A32E' }, dark: { 'cal-brand': '#E0A32E' } },
         theme: 'light',
         hideEventTypeDetails: false,
@@ -237,8 +332,9 @@ function BookACall() {
       ns('on', {
         action: 'bookingSuccessful',
         callback: () => {
-          trackBookingConfirmed(leadId);
-          const q = leadId ? `?r=${encodeURIComponent(leadId)}&booked=1` : '?booked=1';
+          const id = leadRef.current;
+          trackBookingConfirmed(id);
+          const q = id ? `?r=${encodeURIComponent(id)}&booked=1` : '?booked=1';
           window.location.href = `/thank-you${q}`;
         },
       });
@@ -251,7 +347,12 @@ function BookACall() {
       cancelled = true;
       window.clearInterval(poll);
     };
-  }, [leadId]);
+    /* Deliberately empty. The embed mounts once; the only value the effect
+       needed from outside is the lead id, and that is read through a ref at
+       fire time. Re-running this on any dependency change is what mounted the
+       second embed in the first place. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="dp-book">
@@ -305,7 +406,7 @@ function BookACall() {
           </div>
 
           {/* 3 · THE CALENDAR CARD */}
-          <div className="bk-card" id="calendar">
+          <div className="bk-card bk-wide" id="calendar">
             <div className="bk-card-head">
               <h2>Pick a slot that works for you</h2>
               <p>All times are shown in your own time zone.</p>
@@ -345,6 +446,52 @@ function BookACall() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* ── THE SLOT FALLBACK (2026-09-19, Atul) ──────────────────────
+              For the visitor the calendar cannot serve. They registered,
+              none of the open times work, and without this the page's only
+              answer is silence: the likeliest next move is to close the tab
+              and hope someone gets in touch.
+
+              It sits directly under the calendar rather than at the end of
+              the page, because the moment it is needed is the moment the
+              grid comes back with nothing usable, not ten sections later.
+
+              LEADS WITH THE REASSURANCE, not the instruction. It asks for
+              the four things the team needs to place a slot by hand, so the
+              first reply can be a time rather than a request for details. */}
+          <div className="bk-rescue bk-wide">
+            <span className="bk-rescue-eyebrow">
+              <AlertIcon size={14} />
+              Preferred slot not available?
+            </span>
+            <h2>Cannot find a time that works for you?</h2>
+            <p>
+              You have already registered and your place is held, so you will
+              not lose it. If none of the times above suit you, send us your{' '}
+              <strong>name, email, phone number and your preferred day and time</strong>
+              , and we will set up your slot personally.
+            </p>
+            <div className="bk-rescue-acts">
+              <a
+                className="bk-rescue-wa"
+                href={`https://wa.me/${WA_DIGITS}?text=${RESCUE_WA_TEXT}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <WhatsappIcon size={17} />
+                Message us on WhatsApp
+              </a>
+              <a className="bk-rescue-mail" href={RESCUE_MAILTO}>
+                Email us
+              </a>
+            </div>
+            <p className="bk-rescue-direct">
+              <a href={`https://wa.me/${WA_DIGITS}`}>{PHONE_DISPLAY}</a>
+              <span aria-hidden> · </span>
+              <a href={`mailto:${business.email}`}>{business.email}</a>
+            </p>
           </div>
         </div>
 
