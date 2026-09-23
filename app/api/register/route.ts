@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 import { NextResponse } from 'next/server';
 
-import { ATTR_COOKIE, readAttrCookie } from '@/lib/attribution';
+import { ATTR_COOKIE, readAttrCookie } from '@/lib/attribution-edge';
 
 import { FUNNEL_CONFIG, capiReady, isTestMode, siteUrlReady } from '@/lib/funnel-config';
 import { ga4ServerReady, sendGa4Lead } from '@/lib/ga4-server';
