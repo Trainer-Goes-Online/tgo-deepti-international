@@ -54,6 +54,8 @@ export type PabblyLead = {
   email: string;
   phone: string;
   city: string;
+  /** "+1", "+971". Kept apart from `phone`, which arrives as full E.164. */
+  dialCode: string;
   countryCode: string;
   fbc: string;
   fbp: string;
@@ -82,6 +84,11 @@ export type PabblyLead = {
    empty one. */
 const s = (v: unknown) => (v == null ? '' : String(v));
 
+/* One constant behind both `type` and `event`, so a workflow branching on
+   either takes the same path. This funnel hands off exactly one kind of
+   record: a registration for the free assessment. */
+const RECORD_TYPE = 'registration';
+
 export async function sendPabblyLead(
   p: PabblyLead,
 ): Promise<{ ok: boolean; status: number }> {
@@ -102,7 +109,15 @@ export async function sendPabblyLead(
         email: s(p.email),
         phone: s(p.phone),
         city: s(p.city),
+        /* Separate from `phone`, which goes up as full E.164. It matters more
+           on this build than on the India one: the registrants are spread
+           across a dozen dial codes, so a workflow routing or formatting by
+           country would otherwise have to parse the number back apart. */
+        dial_code: s(p.dialCode),
         country_code: s(p.countryCode),
+        /* The record type, carrying the SAME value as `event` below, from one
+           constant, so the two can never disagree. */
+        type: RECORD_TYPE,
         fbc: s(p.fbc),
         fbp: s(p.fbp),
         client_ip_address: s(p.clientIp),
@@ -126,7 +141,7 @@ export async function sendPabblyLead(
         referrer: s(p.referrer),
         landing_url: s(p.landingUrl),
 
-        event: 'registration',
+        event: RECORD_TYPE,
         name: `${s(p.firstName)} ${s(p.lastName)}`.trim(),
         product: s(p.product),
         occupation: s(p.occupation),

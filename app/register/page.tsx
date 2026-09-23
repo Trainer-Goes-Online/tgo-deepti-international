@@ -179,6 +179,12 @@ export default function RegisterPage() {
           phone: e164,
           city: f.city.trim(),
           country: f.country,
+          /* Sent SEPARATELY from the phone, which goes up as full E.164.
+             Pabbly gets its own `dial_code` column, which matters more on this
+             build than on the India one: registrants are spread across a dozen
+             dial codes, so a workflow that routes or formats by country would
+             otherwise have to parse the number back apart. */
+          dialCode: dial,
           ...collectSignals(),
         }),
       });

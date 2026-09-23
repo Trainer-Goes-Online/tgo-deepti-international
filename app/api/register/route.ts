@@ -2,11 +2,17 @@ import crypto from 'crypto';
 
 import { NextResponse } from 'next/server';
 
+import { ATTR_COOKIE, readAttrCookie } from '@/lib/attribution';
+
 import { FUNNEL_CONFIG, capiReady, isTestMode, siteUrlReady } from '@/lib/funnel-config';
 import { ga4ServerReady, sendGa4Lead } from '@/lib/ga4-server';
 import { sendCapiEvent, type Occupation } from '@/lib/meta-capi';
 import { pabblyReady, sendPabblyLead } from '@/lib/pabbly';
-import { readClientIp, readClientUserAgent } from '@/lib/request-signals';
+import {
+  readClientIp,
+  readClientUserAgent,
+  readRequestCookie,
+} from '@/lib/request-signals';
 
 /**
  * THE REGISTRATION. This route is what the India build's Razorpay order,
@@ -95,8 +101,35 @@ export async function POST(req: Request) {
   }
 
   const externalId = truncate(body.externalId, 64);
-  const fbc = truncate(body.fbc);
-  const fbp = truncate(body.fbp);
+
+  /* ── THE COOKIES ON THIS REQUEST (2026-09-23) ──────────────────────────
+     This POST is same-origin, so `_fbc`, `_fbp` and the edge attribution
+     cookie written by middleware.ts are already sitting on it. The route used
+     to ignore them and trust the JSON body alone.
+
+     That mattered most for `_fbc`. If the pixel is blocked, is still loading,
+     or the in-app browser restricted the storage the client reader uses, the
+     body arrives with no fbc and the click id is gone for good, while the
+     cookie was right there on the request.
+
+     Body first, cookie second: the client value is the fresher of the two
+     when both exist, and the cookie is the one that survives when the browser
+     side fails. */
+  const fbc = truncate(body.fbc) || truncate(readRequestCookie(req, '_fbc'));
+  const fbp = truncate(body.fbp) || truncate(readRequestCookie(req, '_fbp'));
+
+  /* The edge copy of the campaign, written by middleware.ts on the very first
+     page view, before any JavaScript ran. The browser copy in the body comes
+     from a React effect plus localStorage, which is exactly what fails in the
+     Instagram and Facebook in-app browsers, the traffic the ads buy.
+
+     NOTE THE CAPS ARE UNCHANGED at 100/200/300. The India build had to cut
+     its UTMs to 20/55/55/55/25 because they ride inside a Razorpay note with
+     a hard 256-character ceiling. This funnel has no gateway and no notes:
+     the values go straight to Pabbly, so there is no reason to trim them. */
+  const edge = readAttrCookie(readRequestCookie(req, ATTR_COOKIE));
+  const utmOf = (bodyVal: unknown, edgeVal: unknown, max: number) =>
+    truncate(bodyVal, max) || truncate(edgeVal, max);
 
   /* ── 1 · FULFILMENT, before anything else. ─────────────────────────── */
   const pabbly = pabblyReady()
@@ -108,6 +141,7 @@ export async function POST(req: Request) {
         email,
         phone,
         city,
+        dialCode: truncate(body.dialCode, 6),
         countryCode: country,
         fbc,
         fbp,
@@ -118,14 +152,14 @@ export async function POST(req: Request) {
         isTest: isTestMode(),
         /* The same id sent to Meta as the Lead event_id. */
         leadEventId: leadId,
-        utmSource: truncate(utm.source, 100),
-        utmMedium: truncate(utm.medium, 100),
-        utmCampaign: truncate(utm.campaign, 100),
-        utmContent: truncate(utm.content, 100),
-        utmTerm: truncate(utm.term, 100),
-        fbclid: truncate(body.fbclid, 200),
-        referrer: truncate(body.referrer, 200),
-        landingUrl: truncate(body.landingUrl, 300),
+        utmSource: utmOf(utm.source, edge.utmSource, 100),
+        utmMedium: utmOf(utm.medium, edge.utmMedium, 100),
+        utmCampaign: utmOf(utm.campaign, edge.utmCampaign, 100),
+        utmContent: utmOf(utm.content, edge.utmContent, 100),
+        utmTerm: utmOf(utm.term, edge.utmTerm, 100),
+        fbclid: utmOf(body.fbclid, edge.fbclid, 200),
+        referrer: utmOf(body.referrer, edge.referrer, 200),
+        landingUrl: utmOf(body.landingUrl, edge.landingUrl, 300),
         product: FUNNEL_CONFIG.contentName,
         occupation: occupation ?? '',
       })
