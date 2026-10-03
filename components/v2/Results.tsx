@@ -37,13 +37,15 @@ export function Results() {
               Real clients, real reports, shared with their permission.
             </p>
           </div>
+        </div>
 
-          <div className="dv2-cases">
-            {CASE_STUDIES.map((c) => {
+        <Rail kind="cases">
+          {(copy) =>
+            CASE_STUDIES.map((c) => {
               const duration = c.stats.find((s) => DURATION.test(s));
               const chips = c.stats.filter((s) => s !== duration);
               return (
-                <article className="dv2-case" key={c.name} data-sdp-reveal>
+                <article className="dv2-case" key={`${copy}-${c.name}`}>
                   <header className="dv2-case-head">
                     <h3>
                       {c.name}, {c.age}
@@ -73,8 +75,11 @@ export function Results() {
                   )}
                 </article>
               );
-            })}
-          </div>
+            })
+          }
+        </Rail>
+
+        <div className="dv2-wrap">
           <p className="dv2-vary">Individual results vary.</p>
         </div>
       </section>
