@@ -1,76 +1,32 @@
-import './landing.css';
+import './v2.css';
 
 import FunnelTracker from '@/components/shared/FunnelTracker';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
-import { AnnounceStrip } from '@/components/landing/AnnounceStrip';
-import { TrustRow } from '@/components/landing/TrustRow';
-import { Hero } from '@/components/landing/Hero';
-import { ForYouIf } from '@/components/landing/ForYouIf';
-import { Proof } from '@/components/landing/Proof';
-import { WhatsAppWall } from '@/components/landing/WhatsAppWall';
-import { Coach } from '@/components/landing/Coach';
-import { Programme } from '@/components/landing/Programme';
-import { Guarantee } from '@/components/landing/Guarantee';
-import { Faq } from '@/components/landing/Faq';
-import { Finale } from '@/components/landing/Finale';
-import { StickyCta } from '@/components/landing/StickyCta';
+import { Header } from '@/components/v2/Header';
+import { Hero } from '@/components/v2/Hero';
+import { ForYou } from '@/components/v2/ForYou';
+import { Approach } from '@/components/v2/Approach';
+import { HowItWorks } from '@/components/v2/HowItWorks';
+import { Results } from '@/components/v2/Results';
+import { Coach } from '@/components/v2/Coach';
+import { Faq } from '@/components/v2/Faq';
+import { Finale } from '@/components/v2/Finale';
 
-/**
- * The landing page — VSL blueprint, SDP component system, oxblood + amber on cream.
- *
- * Everything lives under a single `.sdp-root` wrapper: the skin is scoped
- * to it, so nothing here can leak into the register / book-a-call /
- * thank-you / legal routes.
- *
- * THE WHOLE PAGE, beat by beat, with its band:
- *
- *   0a  announcement strip   §11 Urgency (chrome)   accent bar
- *   0b  trust row            §12 Authority          light-alt strip
- *   1   hero / VSL           §8  Focal media        LIGHT      ← lockup 1
- *   2   this is for you if   §2  one-sided ✓ list   LIGHT      ← lockup 2
- *   3/4 proof, three groups  §6  Proof              LIGHT      ← lockup 3
- *   4b  whatsapp wins wall   §6  Proof (volume)     LIGHT-ALT
- *   5a  credential marquee   §12 Authority          DARK       ← lockup 4
- *   5b  the coach's story    (no shape) TEXT        DARK
- *   7   what's included      §3  Accumulation       LIGHT-ALT  ← lockup 5
- *   8   guarantee            assurance + seal       DARK       ← lockup 6
- *   10  faq                  §5  Objection ledger   LIGHT
- *   11  final cta            the peak               DARK       ← lockup 7
- *   12  sticky cta           chrome                 dark glass
- *
- * TWO BEATS ARE ABSENT ON PURPOSE:
- *   6 · Mechanism — the copy carries the liver mechanism only as the hero
- *       deck sentence. There is no mechanism content to render, and
- *       building a pillar grid out of one sentence would be inventing
- *       structure the meaning does not have. Flagged for NO-BRAINER.
- *   9 · Two Choices — optional in the blueprint, and there is no decision
- *       copy anywhere in the source. Cut, as it was for Kunal.
- *
- * The dark bands land where the skin says they land: authority (coach),
- * risk (guarantee), and the peak (finale). Nowhere else.
- */
+/* Copy: funnel-copy v2 (October 2026). Look: Intl_landing_page_v2_mobile.png. */
 export default function LandingPage() {
   return (
-    <main className="sdp-root">
-      {/* ViewContent + GA4 view_item, once per SESSION. Renders nothing.
-          AddToCart deliberately does NOT live here: it fires from the
-          registration page's own mount, because this page carries seven lockups
-          and a reader who taps two of them would be counted twice. See
-          components/shared/FunnelTracker.tsx. */}
+    <main className="dv2-root">
       <FunnelTracker />
       <ScrollReveal />
-      <AnnounceStrip />
-      <TrustRow />
+      <Header />
       <Hero />
-      <ForYouIf />
-      <Proof />
-      <WhatsAppWall />
+      <ForYou />
+      <Approach />
+      <HowItWorks />
+      <Results />
       <Coach />
-      <Programme />
-      <Guarantee />
       <Faq />
       <Finale />
-      <StickyCta />
     </main>
   );
 }

@@ -15,121 +15,81 @@
 ================================================================ */
 
 :root {
-  /* ═══ GARNET & GOLD ═══════════════════════════════════════════════════
-     GARNET = authority, headings, every dark band.
-     GOLD   = action, and nothing else on the page.
-     CREAM  = the ground.   INK = body copy.
-
-     MEASURED, and these decide where each colour may be used:
-       · Gold #E0A32E is 2.00:1 on cream, so it is a FILL ONLY: the button,
-         the timer, the CTA edge, the lit number on a dark band. It never
-         sets type on a light surface.
-       · Ink on gold is 7.64:1, which makes the CTA the best-contrast object
-         on the page. That is the right way round for a sales page.
-       · Garnet is safe as type at every size: brand-deep #5A1526 is 12.01:1
-         and brand #8C2740 is 7.61:1, so headings, eyebrows and icons can all
-         take it without a large-text-only caveat.
-       · Gold and garnet are 105 degrees apart in hue, not complementary, so
-         the pair reads as a jewel setting rather than as a festive-sale
-         collision. That was the failure mode we rejected on indigo/yellow.
-       · The ONE discipline that keeps this premium: gold never grows past
-         button scale on a light band. A gold-filled section next to a garnet
-         section is where this palette would turn into a wedding invitation.
-     ════════════════════════════════════════════════════════════════════ */
-
-  /* ---- GARNET = AUTHORITY (the skin's --brand slot) ---- */
-  --brand:        #8C2740;  --brand-rgb: 140,39,64;    /* lit garnet: fills, dots, rules, icons */
-  --brand-deep:   #5A1526;                             /* headings + eyebrows: 12.01:1 */
-  --brand-bright: #E8A0AE;                             /* garnet family on the dark bands */
-  --brand-fill:   #F7E9EC;                             /* soft garnet tint */
-  --brand-text:   #7A2036;                             /* links and small garnet type: 9.03:1 */
+  /* Deepti Sherawat brand guidelines v1.0. Supplied colours only; the dark-band
+     tints are the brand sheet's own dark-mode values. Teal is the primary button;
+     on teal bands the action switches to Haldi (see .ty-dark etc. below). */
+  --brand:        #0E4A4C;  --brand-rgb: 14,74,76;   /* Kalyani Teal */
+  --brand-deep:   #0E4A4C;
+  --brand-bright: #9CCBC5;                           /* teal on dark bands */
+  --brand-fill:   #DDE7E2;                           /* Karpur */
+  --brand-text:   #0E4A4C;
   --brand-soft:   rgba(var(--brand-rgb), .10);
   --brand-ring:   rgba(var(--brand-rgb), .25);
 
-  /* ---- GOLD = ACTION ---- */
-  --action:       #E0A32E;  --action-rgb: 224,163,46;
-  --action-hover: #C88C1C;
-  --action-fill:  #FBF0D9;                             /* soft gold tint */
-  --action-edge:  #9A6A0E;                             /* the CTA's 2px bottom edge */
+  --action:       #0E4A4C;  --action-rgb: 14,74,76;
+  --action-hover: #17201F;
+  --action-fill:  #DDE7E2;
+  --action-edge:  #17201F;
 
-  /* ---- NEUTRALS: warm cream, warm ink ---- */
-  --bg:            #F8F2E8;   /* CREAM. The ground. */
-  --card:          #FFFCF5;   /* cards lift off the cream by a hair */
-  --bg-alt:        #F0E7D9;   /* deeper sand: separation, and the hero stage */
-  --bg-aqua:       #F9EDEF;   /* BLUSH, a pale garnet tint. Keeps its old token */
-                              /* name so landing.css is untouched. This is the */
-                              /* programme section. */
-  --ink:           #231A1C;  --ink-rgb: 35,26,28;      /* warm near-black, red cast */
-  --ink-soft:      #61565A;
-  --muted:         #6F6266;
-  --border:        #E6DACD;
-  --border-strong: #D2C2B2;
+  --bg:            #F4EFE4;   /* Chunnam */
+  --card:          #FBF8F1;
+  --bg-alt:        #FBF8F1;
+  --bg-aqua:       #DDE7E2;
 
-  /* ---- DARK BANDS: all garnet, three depths ---- */
-  --bg-dark:           #3A0D19;   /* garnet-black: proof, coach, conversion resets */
-  --bg-dark-alt:       #46121F;
-  --bg-dark-elev:      #56192A;
-  --bg-deep-aqua:      #290911;   /* THE GUARANTEE BAND, and deliberately the */
-                                  /* deepest surface on the page. "The Risk Is */
-                                  /* Ours" is the emotional peak, so it gets the */
-                                  /* most weight. White on it is 18.40:1. */
-  --ink-dark:          #FFFFFF;
-  --ink-dark-soft:     #EBD8DC;
-  --muted-dark:        #B49AA1;
-  --border-dark:       #56192A;
-  --border-dark-strong:#6B2436;
+  --ink:           #17201F;  --ink-rgb: 23,32,31;   /* Kajal */
+  --ink-soft:      #4E4A42;
+  --muted:         #4E4A42;
+  --border:        #D8CDB8;
+  --border-strong: #D8CDB8;
 
-  /* ---- FUNCTIONAL: icon-scale only, never sections ---- */
-  --success: #56794E;                                  /* the trust-row check, 18px */
-  --success-dark: #9CBF93;                             /* the same check on a garnet band */
-  --danger:  #5A1526;  --danger-rgb: 90,21,38;          /* the timer pulse, oxblood not red */
-  --star:    #9C7020;                                  /* deeper than the CTA gold, so a */
-  --gold:    #9C7020;                                  /* rating never competes with it */
+  --bg-dark:           #0E4A4C;
+  --bg-dark-alt:       #0E4A4C;
+  --bg-dark-elev:      #17201F;
+  --bg-deep-aqua:      #17201F;
+  --ink-dark:          #F4EFE4;
+  --ink-dark-soft:     #DDE7E2;
+  --muted-dark:        #C9C3B6;
+  --border-dark:       #33403E;
+  --border-dark-strong:#33403E;
 
-  /* ---- TYPE: THREE VOICES (design-system.base.md C1). The original build
-     ran display-sans + body-sans and no mono, which is the base file's first
-     failure mode. Now:
-       DISPLAY = Fraunces, high-contrast serif. Emotion and authorship.
-       MONO    = IBM Plex Mono. Spec, precision, credibility. Every number,
-                 marker, label and ordinal on the page.
-       BODY    = Manrope. Neutral.
-     Serif never drops below headline size. Weight is 600, not 800: on a serif
-     the stroke contrast carries the authority, so extra weight only muddies
-     it. Fraunces on cream with garnet is the pairing this theme is built on;
-     the serif is doing as much of the premium read as the colour is. ---- */
-  --fh: var(--font-display), 'Fraunces', Georgia, 'Times New Roman', serif;
-  --fm: var(--font-mono), 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
-  --fb: var(--font-manrope), 'Manrope', 'Helvetica Neue', sans-serif;
-  --fh-weight: 600;
+  --success: #3F6B55;                                /* Tulsi */
+  --success-dark: #9CCBC5;
+  --danger:  #9E2F28;  --danger-rgb: 158,47,40;      /* Kumkum */
+  --star:    #C9922E;
+  --gold:    #7A5C33;                                /* Kansa */
 
-  /* ---- RADII: small. A jewel setting has edges, not pills. ---- */
+  /* written = Spectral, measured = Hanken Grotesk (the brand has no mono) */
+  --fh: var(--font-v2-serif), 'Spectral', Georgia, serif;
+  --fm: var(--font-v2-body), 'Hanken Grotesk', system-ui, sans-serif;
+  --fb: var(--font-v2-body), 'Hanken Grotesk', system-ui, sans-serif;
+  --fh-weight: 400;
+
   --r-sm: 4px; --r: 8px; --r-lg: 12px; --r-xl: 16px;
 
-  /* ---- ACCENT ADAPTATIONS ---- */
-  --cta-ink:            #231A1C;            /* INK on gold: 7.64:1 */
+  --cta-ink:            #F4EFE4;
   --accent-text-light:  var(--brand-deep);
   --accent-text-dark:   var(--brand-bright);
 
-  /* ---- DERIVED ---- */
-  --grad-brand:     linear-gradient(135deg, var(--brand-deep), var(--brand));
-  --grad-announce:  var(--brand-deep);      /* top strip: flat garnet, colour from line one */
-  --grad-cta:       var(--action);          /* flat gold, not glossy */
-  /* THE TIMER IS OXBLOOD (Atul, 2026-09-10), not gold.
-     It also separates two things that were reading as one: the countdown and
-     the CTA were both gold fills sitting inches apart, so the timer borrowed
-     the button's urgency and the button lost some of its singularity. Gold is
-     the action colour; a clock is not an action. */
-  --grad-urgency:   var(--brand-deep);
+  --grad-brand:     var(--brand);
+  --grad-announce:  var(--brand);
+  --grad-cta:       var(--action);
+  --grad-urgency:   var(--brand);
   --grad-guarantee: var(--bg-deep-aqua);
-  --hero-stage:     var(--bg-alt);          /* the hero sits on the deeper sand */
-  /* A warm lift behind the video, not a coloured glow. A garnet bloom on sand
-     goes muddy and a gold one goes brassy. */
-  --hero-bloom:     radial-gradient(circle, rgba(255,252,245,.92), transparent 68%);
-  --glow-cta:       0 6px 18px rgba(var(--action-rgb), .32);
-  --glow-cta-hover: 0 10px 24px rgba(var(--action-rgb), .42);
+  --hero-stage:     var(--bg-alt);
+  --hero-bloom:     radial-gradient(circle, rgba(251,248,241,.92), transparent 68%);
+  --glow-cta:       0 6px 18px rgba(var(--action-rgb), .28);
+  --glow-cta-hover: 0 10px 24px rgba(var(--action-rgb), .36);
   --shadow-card:    0 2px 12px rgba(var(--ink-rgb), .07);
   --shadow-card-hover: 0 10px 26px rgba(var(--ink-rgb), .13);
   --inset-hi:       inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+/* On teal bands a teal button would vanish: the action becomes Haldi with Kajal text. */
+.ty-dark, .bk-final, .bk-rescue, .dp-policy .contact {
+  --action: #C9922E;  --action-rgb: 201,146,46;
+  --action-hover: #C9922E;
+  --action-edge: #7A5C33;
+  --cta-ink: #17201F;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

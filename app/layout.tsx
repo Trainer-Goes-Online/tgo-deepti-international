@@ -1,5 +1,13 @@
 import type { Metadata } from 'next';
-import { Fraunces, IBM_Plex_Mono, Manrope } from 'next/font/google';
+import {
+  Fraunces,
+  Hanken_Grotesk,
+  IBM_Plex_Mono,
+  Manrope,
+  Marcellus,
+  Spectral,
+  Tiro_Devanagari_Sanskrit,
+} from 'next/font/google';
 import './globals.css';
 
 import Analytics from '@/components/shared/Analytics';
@@ -43,16 +51,47 @@ const manrope = Manrope({
   display: 'swap',
 });
 
+/* Landing page faces (v2), per the brand typography sheet:
+   written = Spectral, carved = Marcellus, measured = Hanken Grotesk. */
+const v2Serif = Spectral({
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  variable: '--font-v2-serif',
+  display: 'swap',
+});
+const v2Label = Marcellus({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-v2-label',
+  display: 'swap',
+});
+const v2Body = Hanken_Grotesk({
+  weight: ['400', '500', '600'],
+  subsets: ['latin'],
+  variable: '--font-v2-body',
+  display: 'swap',
+});
+const v2Sanskrit = Tiro_Devanagari_Sanskrit({
+  weight: '400',
+  subsets: ['devanagari'],
+  variable: '--font-v2-sanskrit',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Lose 5-15 Kilos, Even If You Have (Pre)Diabetes, Fatty Liver, Cholesterol or Hypothyroidism',
+  title: 'Improve fatty liver. Lose the stubborn weight. Keep the chai.',
   description:
-    'A personalised, root-cause approach that focuses on healing your liver, the master organ connecting your weight & metabolic health. 700+ clients across India, USA, Canada, UK, Australia & The Middle East.',
+    "A one-to-one, 12-week programme where Ayurveda's wisdom about digestion meets modern functional nutrition, with Deepti in the middle making them agree. Built around your food, your routine and your reports.",
   robots: { index: false, follow: false }, // pre-launch: assets + figures not yet final
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable} ${manrope.variable}`}>
+    <html
+      lang="en"
+      className={`${display.variable} ${mono.variable} ${manrope.variable} ${v2Serif.variable} ${v2Label.variable} ${v2Body.variable} ${v2Sanskrit.variable}`}
+    >
       <body>
         {children}
 

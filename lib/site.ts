@@ -22,6 +22,9 @@ export const site = {
   registerUrl: '/register',
   /** Countdown window for the offer urgency, per the copy: 5 hours. */
   offerHours: 5,
+  /** v2 copy prints both in brackets: unconfirmed by the client. */
+  clientsPerMonth: '[8]',
+  yearsInPractice: '[10+]',
 };
 
 /**

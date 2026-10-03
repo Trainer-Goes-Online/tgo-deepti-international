@@ -196,7 +196,7 @@
 .dp-reg .pay-note-chip {
   flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%;
   display: grid; place-items: center; margin-top: 1px;
-  background: var(--brand); color: #fff;
+  background: var(--brand); color: var(--ink-dark);
 }
 .dp-reg .pay-note p {
   margin: 0; font-family: var(--fb);
@@ -474,7 +474,7 @@
     position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
     background: var(--card);
     border-top: 1px solid var(--border);
-    box-shadow: 0 -6px 22px rgba(35, 26, 28, .1);
+    box-shadow: 0 -6px 22px rgba(var(--ink-rgb), .1);
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
   }
   .dp-reg .pay-stuck-inner {
@@ -494,7 +494,7 @@
     flex: 1 1 auto;
     display: flex; align-items: center; justify-content: center; gap: 9px;
     padding: 14px 18px; border: 0; border-radius: var(--r);
-    background: var(--brand); color: #fff; cursor: pointer;
+    background: var(--brand); color: var(--ink-dark); cursor: pointer;
     font-family: var(--fb); font-size: 14.5px; font-weight: 700;
   }
   .dp-reg .pay-stuck-go:disabled { opacity: .62; cursor: default; }

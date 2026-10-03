@@ -308,7 +308,7 @@ function BookACall() {
            is the only thing inside the embed that should look clickable
            either; and light is forced because the page is cream and a dark
            calendar would otherwise drop into the middle of it. */
-        cssVarsPerTheme: { light: { 'cal-brand': '#E0A32E' }, dark: { 'cal-brand': '#E0A32E' } },
+        cssVarsPerTheme: { light: { 'cal-brand': '#0E4A4C' }, dark: { 'cal-brand': '#0E4A4C' } },
         theme: 'light',
         hideEventTypeDetails: false,
         layout: 'month_view',
