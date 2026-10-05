@@ -3,6 +3,7 @@ import { Star } from '@/components/v2/Brand';
 import { BEFORE_AFTER, CASE_STUDIES, TESTIMONIALS } from '@/lib/proof-data';
 import { Cta } from './Cta';
 import { Rail } from './Rail';
+import { SliderImg } from './SliderImg';
 
 /* Lab report images go in /public/reports and are listed here; the row stays hidden while empty. */
 const REPORTS: string[] = [];
@@ -49,15 +50,7 @@ export function Proof() {
       <Rail dir="ltr" className="is-shots">
         {(copy) =>
           BEFORE_AFTER.map((src) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={`${copy}-${src}`}
-              className="v3-shot"
-              src={asset(`/before-after/${encodeURIComponent(src)}`)}
-              alt=""
-              loading="lazy"
-              decoding="async"
-            />
+            <SliderImg key={`${copy}-${src}`} dir="before-after" file={src} className="v3-shot" />
           ))
         }
       </Rail>

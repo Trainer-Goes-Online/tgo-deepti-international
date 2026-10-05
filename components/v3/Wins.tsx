@@ -1,6 +1,6 @@
-import { asset } from '@/components/shared/asset-version';
 import { WA_ROW_1, WA_ROW_2 } from '@/lib/proof-data';
 import { Rail } from './Rail';
+import { SliderImg } from './SliderImg';
 
 export function Wins() {
   return (
@@ -19,15 +19,7 @@ export function Wins() {
         <Rail dir={r === 0 ? 'ltr' : 'rtl'} className="is-wa" key={r}>
           {(copy) =>
             row.map((src) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={`${copy}-${src}`}
-                className="v3-wa"
-                src={asset(`/testimonials/${encodeURIComponent(src)}`)}
-                alt=""
-                loading="lazy"
-                decoding="async"
-              />
+              <SliderImg key={`${copy}-${src}`} dir="testimonials" file={src} className="v3-wa" />
             ))
           }
         </Rail>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import {
-  Figtree,
+  Montserrat,
+  Open_Sans,
   Fraunces,
   Hanken_Grotesk,
   IBM_Plex_Mono,
@@ -73,9 +74,15 @@ const v2Body = Hanken_Grotesk({
   variable: '--font-v2-body',
   display: 'swap',
 });
-/* Landing page v3: a free geometric stand-in for the reference's Circular. */
-const v3Sans = Figtree({
-  weight: ['400', '500', '600', '700', '800', '900'],
+/* Funnel pages: the standard direct-response pairing, Montserrat heads + Open Sans body. */
+const v3Head = Montserrat({
+  weight: ['700', '800', '900'],
+  subsets: ['latin'],
+  variable: '--font-v3-head',
+  display: 'swap',
+});
+const v3Body = Open_Sans({
+  weight: ['400', '600', '700', '800'],
   subsets: ['latin'],
   variable: '--font-v3',
   display: 'swap',
@@ -98,7 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${display.variable} ${mono.variable} ${manrope.variable} ${v2Serif.variable} ${v2Label.variable} ${v2Body.variable} ${v2Sanskrit.variable} ${v3Sans.variable}`}
+      className={`${display.variable} ${mono.variable} ${manrope.variable} ${v2Serif.variable} ${v2Label.variable} ${v2Body.variable} ${v2Sanskrit.variable} ${v3Head.variable} ${v3Body.variable}`}
     >
       <body>
         {children}

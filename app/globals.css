@@ -58,10 +58,10 @@
   --star:    #C9922E;
   --gold:    #7A5C33;                                /* Kansa */
 
-  /* Figtree throughout, matching the landing page (stand-in for Circular) */
-  --fh: var(--font-v3), 'Figtree', system-ui, sans-serif;
-  --fm: var(--font-v3), 'Figtree', system-ui, sans-serif;
-  --fb: var(--font-v3), 'Figtree', system-ui, sans-serif;
+  /* Montserrat heads + Open Sans body, matching the landing page */
+  --fh: var(--font-v3-head), 'Montserrat', system-ui, sans-serif;
+  --fm: var(--font-v3), 'Open Sans', system-ui, sans-serif;
+  --fb: var(--font-v3), 'Open Sans', system-ui, sans-serif;
   --fh-weight: 800;
 
   --r-sm: 4px; --r: 8px; --r-lg: 12px; --r-xl: 16px;

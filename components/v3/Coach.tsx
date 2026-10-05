@@ -57,8 +57,8 @@ export function ApproachImage() {
           The Approach Behind 700+ <br className="v3-br" />
           Client Health Journeys Across The World
         </h2>
-        {/* Scrolls sideways on phones so the diagram's small labels stay readable. */}
-        <div className="v3-approach-scroll" data-sdp-reveal>
+        {/* Tapping opens the full-size diagram, for reading its small labels on a phone. */}
+        <a className="v3-approach-scroll" href={asset('/approach.webp')} target="_blank" rel="noopener" data-sdp-reveal>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset('/approach.webp')}
@@ -68,7 +68,7 @@ export function ApproachImage() {
             loading="lazy"
             decoding="async"
           />
-        </div>
+        </a>
         <Cta />
       </div>
     </section>
