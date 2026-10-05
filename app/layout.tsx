@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import {
+  Figtree,
   Fraunces,
   Hanken_Grotesk,
   IBM_Plex_Mono,
@@ -72,6 +73,13 @@ const v2Body = Hanken_Grotesk({
   variable: '--font-v2-body',
   display: 'swap',
 });
+/* Landing page v3: a free geometric stand-in for the reference's Circular. */
+const v3Sans = Figtree({
+  weight: ['400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+  variable: '--font-v3',
+  display: 'swap',
+});
 const v2Sanskrit = Tiro_Devanagari_Sanskrit({
   weight: '400',
   subsets: ['devanagari'],
@@ -90,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${display.variable} ${mono.variable} ${manrope.variable} ${v2Serif.variable} ${v2Label.variable} ${v2Body.variable} ${v2Sanskrit.variable}`}
+      className={`${display.variable} ${mono.variable} ${manrope.variable} ${v2Serif.variable} ${v2Label.variable} ${v2Body.variable} ${v2Sanskrit.variable} ${v3Sans.variable}`}
     >
       <body>
         {children}

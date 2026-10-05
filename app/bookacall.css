@@ -1,416 +1,135 @@
-/* ════════════════════════════════════════════════════════════════
-   DEEPTI · bookacall.css  ·  scope: .dp-book
-
-   The sixth surface, loaded only by /book-a-call.
-
-   Rebuilt 2026-09-09 to the anatomy of vsl.teamfitarjun.com/book-a-call.
-   The structural correction from the first attempt: this page is a SINGLE
-   CENTRED COLUMN, not a calendar beside a sidebar. The calendar is the
-   only action on the page, so nothing sits next to it competing for the
-   eye, and everything else stacks underneath in the order that walks a
-   paid buyer to a booked one.
-
-   TOKEN-ONLY. The calendar renders inside Cal's own iframe, so its type
-   and chrome are Cal's: the page frames the embed, it never restyles it.
-================================================================ */
-
-.dp-book,
-.dp-book *,
-.dp-book *::before,
-.dp-book *::after { box-sizing: border-box; }
+/* Book-a-call page · deliberately plain, matching the v3 landing page. Scope: .dp-book */
 
 .dp-book {
-  background: var(--bg);
+  background: #fff;
   color: var(--ink);
   font-family: var(--fb);
+  font-size: 17px;
   line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.dp-book .wrap { max-width: 860px; margin: 0 auto; padding: 0 22px; width: 100%; }
-.dp-book .bk-body { flex: 1; padding: 0 0 68px; }
-
-/* ── 1 · confirmation strip ───────────────────────────────────── */
-.dp-book .bk-strip {
-  background: var(--brand-deep); color: var(--ink-dark);
-  font-family: var(--fm); font-size: 11px; font-weight: 500;
-  letter-spacing: .1em; text-transform: uppercase;
-  text-align: center; padding: 11px 18px;
-  display: flex; align-items: center; justify-content: center;
-  flex-wrap: wrap; gap: 8px;
-}
-.dp-book .bk-strip-tick { color: var(--action); }
-.dp-book .bk-strip-sep { opacity: .45; }
-
-/* ── 2 · step dots ────────────────────────────────────────────── */
-.dp-book .bk-steps {
-  list-style: none; margin: 30px 0 22px; padding: 0;
-  display: flex; align-items: center; justify-content: center; gap: 0;
-}
-.dp-book .bk-steps li {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--fm); font-size: 11px; font-weight: 500;
-  letter-spacing: .1em; text-transform: uppercase;
-  color: var(--muted);
-}
-.dp-book .bk-steps li.now { color: var(--ink); }
-/* the connector is the gap between the two steps, drawn rather than boxed */
-.dp-book .bk-steps li + li::before {
-  content: ""; width: 46px; height: 1px; background: var(--border-strong);
-  margin: 0 14px;
-}
-.dp-book .bk-dot {
-  width: 22px; height: 22px; border-radius: 50%;
-  display: grid; place-items: center;
-  font-size: 11px; letter-spacing: 0;
-}
-.dp-book .bk-steps li.done .bk-dot { background: var(--brand-deep); color: var(--ink-dark); }
-.dp-book .bk-steps li.now .bk-dot { background: var(--action); color: var(--cta-ink); font-weight: 600; }
-
-/* ── 3 · masthead ─────────────────────────────────────────────── */
-.dp-book .bk-mast { text-align: center; margin: 0 auto 32px; max-width: 700px; }
-.dp-book .bk-pill {
-  display: inline-block;
-  font-family: var(--fm); font-size: 10.5px; font-weight: 500;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--brand-deep); background: var(--brand-fill);
-  border: 1px solid rgba(var(--brand-rgb), .28);
-  border-radius: 999px; padding: 6px 14px; margin-bottom: 18px;
-}
-.dp-book .bk-mast h1 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: clamp(27px, 4vw, 42px); line-height: 1.14; letter-spacing: -.015em;
-  color: var(--ink); margin: 0 0 14px; text-wrap: balance;
-}
-/* the accent line is italic AND garnet, the same double lift the funnel's
-   headlines use, so the two pages read as one voice */
-.dp-book .bk-mast h1 em { font-style: italic; color: var(--brand-deep); }
-.dp-book .bk-deck {
-  font-size: 15.5px; line-height: 1.7; color: var(--ink-soft);
-  margin: 0 auto; max-width: 540px;
-}
-
-/* ── 4 · the calendar card ────────────────────────────────────── */
-.dp-book .bk-card {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-card);
-  padding: 22px;
-  scroll-margin-top: 18px;
-}
-.dp-book .bk-card-head { margin-bottom: 16px; }
-.dp-book .bk-card-head h2 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: 20px; line-height: 1.25; letter-spacing: -.008em;
-  color: var(--ink); margin: 0 0 4px;
-}
-.dp-book .bk-card-head p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
-
-/* the embed sits on a neutral LIGHT inset inside the card: the brand frames
-   the third-party UI, it does not try to repaint it */
-.dp-book .bk-cal-inset {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  min-height: 560px;
-}
-.dp-book .bk-cal {
-  /* Cal's own snippet ships width:100%;height:100%;overflow:scroll on the
-     mount point. height:100% would collapse here (no sized parent), so the
-     inset holds the height and this scrolls inside it. */
-  width: 100%; min-height: 560px; overflow: auto;
-}
-.dp-book .bk-cal iframe { width: 100%; border: 0; display: block; }
-
-/* ── THE DESKTOP BREAKOUT ──────────────────────────────────────────────
-   Cal lays itself out from the width it is GIVEN, not from the viewport.
-   .wrap is 860px, and after its 22px padding and the card's 22px the embed
-   was being handed about 770px, below the threshold for Cal's wide layout.
-   So it fell back to the stacked one, which on a desktop screen reads as a
-   phone view dropped into the middle of the page.
-
-   The calendar and its aside therefore break OUT of the measure while the
-   heading above them keeps it. That split is deliberate: a 1140px slab of
-   calendar is right, a 1140px line of body copy is not.
-
-   IT CANNOT OVERFLOW. min() clamps the width to the viewport less a 48px
-   gutter, and the pull-left is derived from that same value, so the block
-   stays centred on the wrap at every width instead of sliding off the right
-   edge. Gated at 1080px, which is the narrowest viewport where the full
-   1140 still clears its gutters. */
-@media (min-width: 1080px) {
-  .dp-book .bk-wide {
-    --bk-wide-w: min(1140px, calc(100vw - 48px));
-    width: var(--bk-wide-w);
-    margin-left: calc(50% - var(--bk-wide-w) / 2);
-  }
-}
-
-/* ── 4b · THE SLOT FALLBACK ────────────────────────────────────────
-   A SEPARATE panel below the calendar card, not a strip inside it. It
-   only speaks to the visitor the grid could not serve, and folding it
-   in would put a "cannot find a time?" message in front of everyone
-   who just found one.
-
-   It is deliberately quieter than the card above: a dark band rather
-   than another raised light surface, so it reads as an aside from the
-   team and not as a second thing to do. */
-.dp-book .bk-rescue {
-  margin-top: 20px; padding: 34px 28px 30px;
-  background: var(--bg-dark-alt);
-  border: 1px solid var(--border-dark-strong);
-  border-radius: var(--r-xl);
   text-align: center;
 }
+.dp-book em { font-style: normal; color: inherit; }
+.dp-book ul,
+.dp-book ol { list-style: none; }
+.dp-book a { color: var(--brand); }
+.dp-book .wrap { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
 
-/* --brand-bright is the garnet the token file reserves for exactly this:
-   the family colour on a dark band. */
+.dp-book .bk-body { padding: 40px 0 64px; }
+
+/* masthead */
+.dp-book .bk-pill {
+  display: block; margin-bottom: 10px;
+  font-size: 15px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--brand);
+}
+.dp-book .bk-mast h1,
+.dp-book h2 { font-family: var(--fh); font-weight: 900; letter-spacing: -.02em; color: var(--ink); }
+.dp-book .bk-mast h1 { max-width: 900px; margin: 0 auto; font-size: clamp(34px, 5.2vw, 56px); line-height: 1.08; }
+.dp-book h2 { font-size: clamp(28px, 3.8vw, 42px); line-height: 1.14; }
+.dp-book .bk-deck,
+.dp-book .bk-h2-sub { max-width: 760px; margin: 16px auto 0; font-size: clamp(18px, 1.9vw, 20px); color: var(--ink-soft); }
+.dp-book .bk-h2 { max-width: 860px; margin: 64px auto 0; }
+
+/* calendar */
+.dp-book .bk-card { max-width: 900px; margin: 36px auto 0; }
+.dp-book .bk-card-head h2 { font-size: clamp(24px, 2.8vw, 30px); }
+.dp-book .bk-card-head p { margin-top: 8px; color: var(--ink-soft); }
+.dp-book .bk-cal-inset {
+  margin-top: 20px; min-height: 560px; overflow: hidden;
+  border: 1px solid var(--border); border-radius: 12px;
+}
+/* Cal's mount ships height:100%; the inset holds the height and this scrolls inside it. */
+.dp-book .bk-cal { width: 100%; min-height: 560px; overflow: auto; }
+.dp-book .bk-cal iframe { width: 100%; border: 0; display: block; }
+.dp-book .bk-cal-note { padding: 16px; color: var(--ink-soft); }
+.dp-book .bk-cal-note.failed { color: var(--danger); font-weight: 600; }
+.dp-book .bk-direct { margin-top: 14px; font-size: 16px; color: var(--ink-soft); }
+
+/* reassurance: plain ticked list */
+.dp-book .bk-reassure { max-width: 760px; margin: 28px auto 0; text-align: left; display: grid; gap: 12px; }
+.dp-book .bk-reassure li { display: flex; gap: 10px; }
+.dp-book .bk-check { color: var(--brand); font-weight: 900; }
+
+/* can't find a time */
+.dp-book .bk-rescue { max-width: 760px; margin: 48px auto 0; padding-top: 40px; border-top: 1px solid var(--border); }
 .dp-book .bk-rescue-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 16px; border-radius: 999px;
-  border: 1px solid rgba(var(--brand-rgb), .45);
-  background: rgba(var(--brand-rgb), .14);
-  font-family: var(--fb); font-size: 10.5px; font-weight: 700;
-  letter-spacing: .14em; text-transform: uppercase; line-height: 1;
-  color: var(--brand-bright);
+  display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 10px;
+  font-size: 15px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--brand);
 }
-.dp-book .bk-rescue-eyebrow svg { flex: 0 0 auto; }
-
-.dp-book .bk-rescue h2 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: clamp(20px, 2.6vw, 26px); line-height: 1.24; letter-spacing: -.012em;
-  color: var(--ink-dark); margin: 16px 0 0; text-wrap: balance;
-}
-.dp-book .bk-rescue > p {
-  max-width: 54ch; margin: 12px auto 0;
-  font-size: 14px; line-height: 1.7; color: var(--ink-dark-soft);
-}
-.dp-book .bk-rescue strong { color: var(--ink-dark); font-weight: 600; }
-
-.dp-book .bk-rescue-acts {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 22px;
-}
+.dp-book .bk-rescue h2 { font-size: clamp(24px, 2.8vw, 30px); }
+.dp-book .bk-rescue p { margin-top: 12px; color: var(--ink-soft); }
+.dp-book .bk-rescue-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
 .dp-book .bk-rescue-acts a {
-  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-  padding: 13px 22px; border-radius: 999px;
-  font-family: var(--fb); font-size: 14px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 10px;
+  font-weight: 800; font-size: 17px; text-decoration: none;
 }
-/* WhatsApp keeps its own green. It is a destination the reader recognises
-   by colour, and a garnet button here would claim to be this page's primary
-   action, which is and stays the calendar. */
 .dp-book .bk-rescue-wa { background: #1FA855; color: #fff; }
 .dp-book .bk-rescue-wa:hover { background: #1B9349; }
-.dp-book .bk-rescue-mail {
-  background: transparent; color: var(--ink-dark);
-  border: 1px solid var(--border-dark-strong);
-}
-.dp-book .bk-rescue-mail:hover { border-color: var(--brand-bright); color: var(--brand-bright); }
+.dp-book .bk-rescue-mail { border: 2px solid var(--brand); color: var(--brand); }
+.dp-book .bk-rescue-direct { font-size: 16px; }
 
-.dp-book .bk-rescue-direct {
-  margin: 18px 0 0; font-family: var(--fb); font-size: 12.5px; color: var(--muted-dark);
-}
-.dp-book .bk-rescue-direct a { color: var(--brand-bright); }
-.dp-book .bk-rescue-direct a:hover { border-bottom: 1px solid var(--brand-bright); }
-
-@media (max-width: 560px) {
-  .dp-book .bk-rescue { padding: 26px 18px 24px; }
-  .dp-book .bk-rescue-acts { gap: 10px; }
-  .dp-book .bk-rescue-acts a { flex: 1 1 100%; }
-}
-
-.dp-book .bk-cal-note {
-  font-family: var(--fm); font-size: 11.5px; letter-spacing: .06em;
-  color: var(--muted); text-align: center; padding: 26px 16px 0; margin: 0;
-}
-/* failure speaks in the gold open-item register, not a red error: nothing has
-   gone wrong with their payment, only with an embed */
-.dp-book .bk-cal-note.failed {
-  font-family: var(--fb); font-size: 14px; line-height: 1.6; letter-spacing: 0;
-  color: var(--ink); text-align: left;
-  background: var(--action-fill);
-  border-left: 4px solid var(--action-edge);
-  padding: 14px 16px; margin: 14px;
-  border-radius: var(--r-sm);
-}
-.dp-book .bk-direct {
-  font-size: 13px; color: var(--ink-soft); text-align: center;
-  padding: 14px 8px 0; margin: 0;
-}
-.dp-book .bk-direct a { color: var(--brand-text); border-bottom: 1px solid var(--border-strong); }
-.dp-book .bk-direct a:hover { border-bottom-color: var(--brand-text); }
-
-/* three reassurances, inside the card, under the embed */
-.dp-book .bk-reassure {
-  list-style: none; margin: 18px 0 0; padding: 16px 0 0;
-  border-top: 1px solid var(--border-strong);
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-}
-.dp-book .bk-reassure li {
-  display: flex; gap: 9px; font-size: 13px; line-height: 1.55; color: var(--ink-soft);
-}
-.dp-book .bk-reassure b { color: var(--ink); font-weight: 600; }
-.dp-book .bk-check {
-  flex: 0 0 16px; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--brand-fill); color: var(--brand-deep);
-  display: grid; place-items: center; font-size: 10px; margin-top: 2px;
-}
-
-/* ── 5 · section headings shared below the card ───────────────── */
-.dp-book .bk-h2 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: clamp(22px, 3vw, 30px); line-height: 1.2; letter-spacing: -.012em;
-  color: var(--ink); text-align: center; margin: 58px 0 8px; text-wrap: balance;
-}
-.dp-book .bk-h2 em { font-style: italic; color: var(--brand-deep); }
-.dp-book .bk-h2-sub {
-  text-align: center; font-size: 14px; color: var(--ink-soft); margin: 0 0 26px;
-}
-
-/* ── 6 · proof strips ─────────────────────────────────────────── */
-.dp-book .bk-proof { margin-top: 6px; }
-.dp-book .bk-strips { display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+/* proof strips */
+.dp-book .bk-proof { margin-top: 64px; }
+.dp-book .bk-strips { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; overflow: hidden; }
 .dp-book .bk-marquee {
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
-.dp-book .bk-track { display: flex; gap: 14px; width: max-content; will-change: transform; }
+.dp-book .bk-track { display: flex; gap: 14px; width: max-content; }
 .dp-book .bk-marquee.ltr .bk-track { animation: dpBkLtr 90s linear infinite; }
 .dp-book .bk-marquee.rtl .bk-track { animation: dpBkRtl 90s linear infinite; }
 @keyframes dpBkLtr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 @keyframes dpBkRtl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .dp-book .bk-marquee:hover .bk-track { animation-play-state: paused; }
-.dp-book .bk-shot {
-  flex: 0 0 auto; width: 176px;
-  border-radius: var(--r); overflow: hidden;
-  background: var(--card); border: 1px solid var(--border);
-  box-shadow: var(--shadow-card);
-}
+.dp-book .bk-shot { flex: 0 0 auto; width: 176px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 .dp-book .bk-shot > img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; display: block; }
-.dp-book .bk-mid-cta { text-align: center; margin-top: 26px; }
+.dp-book .bk-mid-cta { margin-top: 32px; }
 
-/* ── 7 · the button. Gold, ink label, the funnel's only action colour ── */
+/* buttons, the landing CTA */
 .dp-book .bk-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--action); color: var(--cta-ink);
-  font-family: var(--fb); font-size: 15px; font-weight: 700;
-  padding: 14px 26px; border-radius: var(--r-sm);
-  border-bottom: 2px solid var(--action-edge);
-  box-shadow: var(--glow-cta);
-  transition: background .2s, box-shadow .2s, transform .2s;
+  display: block; max-width: 900px; margin: 0 auto; padding: 20px 24px; border-radius: 10px;
+  background: var(--brand); color: #fff; text-decoration: none;
+  font-weight: 900; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.25;
+  transition: background .6s ease;
 }
-.dp-book .bk-btn:hover { background: var(--action-hover); box-shadow: var(--glow-cta-hover); transform: translateY(-1px); }
-.dp-book .bk-btn:focus-visible { outline: 2px solid var(--brand-deep); outline-offset: 3px; }
-.dp-book .bk-btn.lg { font-size: 16px; padding: 16px 30px; }
+.dp-book .bk-btn:hover { background: var(--ink); }
+.dp-book .bk-btn:focus-visible { outline: 3px solid var(--action); outline-offset: 3px; }
 
-/* ── 8 · what you walk away with ──────────────────────────────── */
-.dp-book .bk-value {
-  list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-}
-.dp-book .bk-value li {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 20px 18px;
-  box-shadow: var(--shadow-card);
-}
-.dp-book .bk-ord {
-  display: inline-block;
-  font-family: var(--fm); font-size: 11px; font-weight: 600; letter-spacing: .1em;
-  color: var(--cta-ink); background: var(--action);
-  border-radius: var(--r-sm); padding: 3px 8px; margin-bottom: 12px;
-}
-.dp-book .bk-value h3 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: 17px; line-height: 1.3; color: var(--ink); margin: 0 0 8px;
-}
-.dp-book .bk-value p { font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); margin: 0; }
+/* what you walk away with: a numbered list */
+.dp-book .bk-value { max-width: 760px; margin: 32px auto 0; text-align: left; border-top: 1px solid var(--border); }
+.dp-book .bk-value li { display: flex; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.dp-book .bk-ord { flex: 0 0 auto; font-weight: 800; font-size: 20px; line-height: 1.3; color: var(--brand); }
+.dp-book .bk-value h3 { font-size: 20px; font-weight: 800; line-height: 1.3; }
+.dp-book .bk-value p { margin-top: 6px; color: var(--ink-soft); }
 
-/* ── 9 · the nudge ────────────────────────────────────────────── */
-.dp-book .bk-nudge {
-  margin-top: 46px; text-align: center;
-  background: var(--brand-fill);
-  border: 1px solid rgba(var(--brand-rgb), .28);
-  border-radius: var(--r-lg);
-  padding: 34px 26px;
-}
-.dp-book .bk-nudge h2 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: clamp(21px, 2.8vw, 28px); line-height: 1.2; letter-spacing: -.012em;
-  color: var(--ink); margin: 0 0 12px; text-wrap: balance;
-}
-.dp-book .bk-nudge h2 em { font-style: italic; color: var(--brand-deep); }
-.dp-book .bk-nudge p {
-  font-size: 15px; line-height: 1.7; color: var(--ink-soft);
-  max-width: 520px; margin: 0 auto 22px;
-}
+/* nudge + final */
+.dp-book .bk-nudge,
+.dp-book .bk-final { max-width: 860px; margin: 64px auto 0; padding-top: 48px; border-top: 1px solid var(--border); }
+.dp-book .bk-nudge p,
+.dp-book .bk-final p { margin: 14px auto 24px; max-width: 760px; color: var(--ink-soft); }
 
-/* ── 10 · objections ──────────────────────────────────────────── */
-.dp-book .bk-faq { display: flex; flex-direction: column; gap: 10px; }
-.dp-book .bk-faq details {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); overflow: hidden;
-}
-.dp-book .bk-faq details[open] { border-color: rgba(var(--brand-rgb), .35); }
+/* faq */
+.dp-book .bk-faq { max-width: 760px; margin: 28px auto 0; text-align: left; border-top: 1px solid var(--border); }
+.dp-book .bk-faq details { border-bottom: 1px solid var(--border); }
 .dp-book .bk-faq summary {
-  cursor: pointer; list-style: none;
-  padding: 16px 18px; font-size: 15px; font-weight: 600; color: var(--ink);
-  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  cursor: pointer; list-style: none; padding: 18px 0;
+  display: flex; justify-content: space-between; gap: 14px;
+  font-size: 18px; font-weight: 800; line-height: 1.35;
 }
 .dp-book .bk-faq summary::-webkit-details-marker { display: none; }
-.dp-book .bk-faq summary::after {
-  content: "+"; font-family: var(--fm); color: var(--brand); font-size: 17px; line-height: 1;
-}
-.dp-book .bk-faq details[open] summary::after { content: "–"; }
-.dp-book .bk-faq summary:focus-visible { outline: 2px solid var(--action); outline-offset: -3px; }
-.dp-book .bk-faq p {
-  padding: 0 18px 18px; margin: 0;
-  font-size: 14px; line-height: 1.75; color: var(--ink-soft);
-}
+.dp-book .bk-faq summary::after { content: "+"; color: var(--brand); font-weight: 900; }
+.dp-book .bk-faq details[open] summary::after { content: "−"; }
+.dp-book .bk-faq summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.dp-book .bk-faq p { padding: 0 0 18px; color: var(--ink-soft); }
 
-/* ── 11 · closing card ────────────────────────────────────────── */
-.dp-book .bk-final {
-  margin-top: 46px; text-align: center;
-  background: var(--bg-dark); color: var(--ink-dark);
-  border-radius: var(--r-lg);
-  padding: 40px 26px;
-}
-.dp-book .bk-final h2 {
-  font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: clamp(23px, 3vw, 32px); line-height: 1.18; letter-spacing: -.012em;
-  color: var(--ink-dark); margin: 0 0 10px;
-}
-.dp-book .bk-final h2 em { font-style: italic; color: var(--brand-bright); }
-.dp-book .bk-final p { font-size: 15px; color: var(--ink-dark-soft); margin: 0 0 24px; }
+.dp-book .bk-help { margin-top: 32px; font-size: 16px; color: var(--ink-soft); }
 
-.dp-book .bk-help {
-  text-align: center; font-size: 13px; color: var(--ink-soft);
-  margin: 30px 0 0;
-}
-.dp-book .bk-help a { color: var(--brand-text); overflow-wrap: anywhere; }
-.dp-book .bk-help a:hover { border-bottom: 1px solid var(--brand-text); }
-
-/* ── responsive ───────────────────────────────────────────────── */
-@media (max-width: 780px) {
-  .dp-book .bk-reassure { grid-template-columns: 1fr; gap: 12px; }
-  .dp-book .bk-value { grid-template-columns: 1fr; }
-}
 @media (max-width: 640px) {
-  .dp-book .bk-strip { font-size: 10px; letter-spacing: .06em; gap: 6px; padding: 10px 14px; }
-  .dp-book .bk-steps { margin: 22px 0 18px; }
-  .dp-book .bk-steps li + li::before { width: 26px; margin: 0 9px; }
-  .dp-book .bk-steps li { font-size: 10px; letter-spacing: .06em; }
-  .dp-book .bk-card { padding: 14px; }
   .dp-book .bk-shot { width: 132px; }
-  .dp-book .bk-h2 { margin-top: 44px; }
-  .dp-book .bk-final { padding: 32px 20px; }
+  .dp-book .bk-h2 { margin-top: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* the proof strips become plain scrollers: the proof stays, the reader
-     moves it by hand */
   .dp-book .bk-marquee { overflow-x: auto; }
   .dp-book .bk-track { animation: none !important; }
 }

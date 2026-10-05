@@ -57,18 +57,6 @@
   background: var(--hero-stage);
   border-bottom: 1px solid var(--border);
 }
-/* the same blueprint grid as the landing hero, at the same reduced weight.
-   Without it the masthead is a flat band and the page has no opening. */
-.dp-policy .hero::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(var(--ink-rgb), .05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--ink-rgb), .05) 1px, transparent 1px);
-  background-size: 44px 44px;
-  -webkit-mask-image: radial-gradient(ellipse at 50% 35%, #000 35%, transparent 75%);
-          mask-image: radial-gradient(ellipse at 50% 35%, #000 35%, transparent 75%);
-  opacity: .5;
-}
 .dp-policy .hero .wrap { position: relative; z-index: 1; }
 
 /* pill eyebrow: mono, because an eyebrow is a label */

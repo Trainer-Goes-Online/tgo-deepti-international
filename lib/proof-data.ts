@@ -95,8 +95,8 @@ export const CASE_STUDIES: readonly CaseStudy[] = [
   {
     name: 'Kulpriya',
     age: '33',
-    body: 'Despite working out regularly and eating healthy, Kulpriya was struggling to lose fat, especially around her belly. She was also dealing with Grade 1 fatty liver, bloating, gas, acne, pigmentation and multiple food sensitivities linked to an autoimmune condition. With a personalised nutrition approach focused on foods that suited her body, she lost around 5 kg, improved her digestion and skin health, and her Grade 1 fatty liver improved.',
-    stats: ['~5 KG FAT LOSS', 'GRADE 1 FATTY LIVER → IMPROVED', 'DIGESTIVE ISSUES → BETTER MANAGED', 'SKIN HEALTH → NOTICEABLY IMPROVED'],
+    body: 'Despite working out regularly and eating healthy, Kulpriya was struggling to lose fat, especially around her belly. She was also dealing with Grade 1 fatty liver, bloating, gas, acne, pigmentation and multiple food sensitivities linked to an autoimmune condition. With a personalised nutrition approach focused on foods that suited her body, she lost around 5 kg, improved her digestion and skin health, and her Grade 1 fatty liver healed.',
+    stats: ['~5 KG FAT LOSS', 'GRADE 1 → HEALED FATTY LIVER', 'DIGESTIVE ISSUES → BETTER MANAGED', 'SKIN HEALTH → NOTICEABLY IMPROVED'],
   },
 ];
 

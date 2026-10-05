@@ -1,32 +1,36 @@
-import './v2.css';
+import './v3.css';
 
 import FunnelTracker from '@/components/shared/FunnelTracker';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
-import { Header } from '@/components/v2/Header';
-import { Hero } from '@/components/v2/Hero';
-import { ForYou } from '@/components/v2/ForYou';
-import { Approach } from '@/components/v2/Approach';
-import { HowItWorks } from '@/components/v2/HowItWorks';
-import { Results } from '@/components/v2/Results';
-import { Coach } from '@/components/v2/Coach';
-import { Faq } from '@/components/v2/Faq';
-import { Finale } from '@/components/v2/Finale';
+import { SiteFooter } from '@/components/shared/SiteFooter';
+import { TopBar } from '@/components/v3/TopBar';
+import { Hero } from '@/components/v3/Hero';
+import { ForYou } from '@/components/v3/ForYou';
+import { Proof } from '@/components/v3/Proof';
+import { Wins } from '@/components/v3/Wins';
+import { ApproachImage, Coach } from '@/components/v3/Coach';
+import { Faq } from '@/components/v3/Faq';
 
-/* Copy: funnel-copy v2 (October 2026). Look: Intl_landing_page_v2_mobile.png. */
+/* Copy: October 2026 update. Look: thedoordieexperience.com in the Deepti brand teal. */
 export default function LandingPage() {
   return (
-    <main className="dv2-root">
+    <main className="v3-root">
       <FunnelTracker />
       <ScrollReveal />
-      <Header />
+      <TopBar />
       <Hero />
       <ForYou />
-      <Approach />
-      <HowItWorks />
-      <Results />
+      <Proof />
+      <Wins />
       <Coach />
+      <ApproachImage />
       <Faq />
-      <Finale />
+      <p className="v3-disclaimer">
+        Individual results vary. This programme provides nutrition and lifestyle guidance and does
+        not replace medical care. It is not intended to diagnose, treat, cure or prevent any disease.
+        Please consult your doctor before making changes to your diet, medication or exercise.
+      </p>
+      <SiteFooter />
     </main>
   );
 }

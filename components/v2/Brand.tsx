@@ -11,8 +11,7 @@ export function Symbol({
   variant?: 'teal' | 'reversed';
   className?: string;
 }) {
-  const file =
-    size < 48 ? 'symbol-simple' : variant === 'reversed' ? 'symbol-reversed' : 'symbol';
+  const file = `symbol${size < 48 ? '-simple' : ''}${variant === 'reversed' ? '-reversed' : ''}`;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img

@@ -31,9 +31,9 @@
   --action-fill:  #DDE7E2;
   --action-edge:  #17201F;
 
-  --bg:            #F4EFE4;   /* Chunnam */
-  --card:          #FBF8F1;
-  --bg-alt:        #FBF8F1;
+  --bg:            #FFFFFF;   /* white ground, matching the landing page */
+  --card:          #FFFFFF;
+  --bg-alt:        #FFFFFF;
   --bg-aqua:       #DDE7E2;
 
   --ink:           #17201F;  --ink-rgb: 23,32,31;   /* Kajal */
@@ -58,11 +58,11 @@
   --star:    #C9922E;
   --gold:    #7A5C33;                                /* Kansa */
 
-  /* written = Spectral, measured = Hanken Grotesk (the brand has no mono) */
-  --fh: var(--font-v2-serif), 'Spectral', Georgia, serif;
-  --fm: var(--font-v2-body), 'Hanken Grotesk', system-ui, sans-serif;
-  --fb: var(--font-v2-body), 'Hanken Grotesk', system-ui, sans-serif;
-  --fh-weight: 400;
+  /* Figtree throughout, matching the landing page (stand-in for Circular) */
+  --fh: var(--font-v3), 'Figtree', system-ui, sans-serif;
+  --fm: var(--font-v3), 'Figtree', system-ui, sans-serif;
+  --fb: var(--font-v3), 'Figtree', system-ui, sans-serif;
+  --fh-weight: 800;
 
   --r-sm: 4px; --r: 8px; --r-lg: 12px; --r-xl: 16px;
 
@@ -76,12 +76,13 @@
   --grad-urgency:   var(--brand);
   --grad-guarantee: var(--bg-deep-aqua);
   --hero-stage:     var(--bg-alt);
-  --hero-bloom:     radial-gradient(circle, rgba(251,248,241,.92), transparent 68%);
-  --glow-cta:       0 6px 18px rgba(var(--action-rgb), .28);
-  --glow-cta-hover: 0 10px 24px rgba(var(--action-rgb), .36);
-  --shadow-card:    0 2px 12px rgba(var(--ink-rgb), .07);
-  --shadow-card-hover: 0 10px 26px rgba(var(--ink-rgb), .13);
-  --inset-hi:       inset 0 1px 0 rgba(255,255,255,.18);
+  --hero-bloom:     none;
+  /* no shadows anywhere: a zero shadow, not none, so paired values stay valid */
+  --glow-cta:       0 0 0 0 transparent;
+  --glow-cta-hover: 0 0 0 0 transparent;
+  --shadow-card:    0 0 0 0 transparent;
+  --shadow-card-hover: 0 0 0 0 transparent;
+  --inset-hi:       0 0 0 0 transparent;
 }
 
 /* On teal bands a teal button would vanish: the action becomes Haldi with Kajal text. */

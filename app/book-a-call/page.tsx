@@ -356,41 +356,8 @@ function BookACall() {
 
   return (
     <div className="dp-book">
-      {/* 1 · confirmation strip */}
-      <div className="bk-strip">
-        <span className="bk-strip-tick" aria-hidden>
-          ✓
-        </span>
-        Details received
-        <span className="bk-strip-sep" aria-hidden>
-          ·
-        </span>
-        1 step left
-        <span className="bk-strip-sep" aria-hidden>
-          ·
-        </span>
-        30 minutes with Deepti&rsquo;s team
-      </div>
-
       <section className="bk-body">
         <div className="wrap">
-          {/* 2 · step dots. Two steps, one done. The reference uses these to
-              make "you are nearly finished" a picture rather than a claim. */}
-          <ol className="bk-steps" aria-label="Progress">
-            <li className="done">
-              <span className="bk-dot" aria-hidden>
-                ✓
-              </span>
-              Details in
-            </li>
-            <li className="now" aria-current="step">
-              <span className="bk-dot" aria-hidden>
-                2
-              </span>
-              Book your assessment
-            </li>
-          </ol>
-
           <div className="bk-mast">
             <span className="bk-pill">One step left</span>
             <h1>
@@ -543,9 +510,11 @@ function BookACall() {
           <ol className="bk-value">
             {WALK_AWAY.map((w, i) => (
               <li key={w.title}>
-                <span className="bk-ord">{String(i + 1).padStart(2, '0')}</span>
-                <h3>{w.title}</h3>
-                <p>{w.body}</p>
+                <span className="bk-ord">{i + 1}</span>
+                <div>
+                  <h3>{w.title}</h3>
+                  <p>{w.body}</p>
+                </div>
               </li>
             ))}
           </ol>

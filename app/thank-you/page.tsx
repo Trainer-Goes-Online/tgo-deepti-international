@@ -146,9 +146,11 @@ function ThankYou() {
           <ol className="ty-ord-grid">
             {CLARITY.map((c, i) => (
               <li key={c.title}>
-                <span className="ty-ord">{String(i + 1).padStart(2, '0')}</span>
-                <h3>{c.title}</h3>
-                <p>{c.body}</p>
+                <span className="ty-ord">{i + 1}</span>
+                <div>
+                  <h3>{c.title}</h3>
+                  <p>{c.body}</p>
+                </div>
               </li>
             ))}
           </ol>
@@ -168,14 +170,17 @@ function ThankYou() {
             goes. You do not need perfect data.
           </p>
 
-          <ul className="ty-ready">
-            {HAVE_READY.map(([t, b]) => (
+          <ol className="ty-ord-grid">
+            {HAVE_READY.map(([t, b], i) => (
               <li key={t}>
-                <h3>{t}</h3>
-                <p>{b}</p>
+                <span className="ty-ord">{i + 1}</span>
+                <div>
+                  <h3>{t}</h3>
+                  <p>{b}</p>
+                </div>
               </li>
             ))}
-          </ul>
+          </ol>
 
           <p className="ty-note">
             Come with what is true for you today, not what you wish were true.
