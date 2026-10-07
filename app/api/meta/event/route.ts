@@ -9,18 +9,18 @@ import {
 } from '@/lib/meta-capi';
 
 /**
- * One route for the events a BROWSER is allowed to announce: ViewContent and
- * AddToCart, the two funnel steps, plus Schedule, the booking Cal reports back
+ * One route for the events a BROWSER is allowed to announce: view_content and
+ * atc_event, the two funnel steps, plus call_booked, the booking Cal reports back
  * inside its embed.
  *
  * The allow-list below is what keeps a single public route from becoming a
- * hole: only reviewed names are accepted, and LEAD IS EXPLICITLY NOT AMONG
+ * hole: only reviewed names are accepted, and lead_registered IS EXPLICITLY NOT AMONG
  * THEM. Lead is the conversion this funnel optimises against and it is sent
  * only by /api/register, on the request that also writes the record to
  * Pabbly, so a stranger who finds this endpoint cannot forge one. QualifiedLead
  * is excluded for the same reason: it is a label on that same conversion.
  *
- * Schedule IS accepted here, and that is a stated compromise rather than an
+ * call_booked IS accepted here, and that is a stated compromise rather than an
  * oversight. Cal's embed message is the only booking signal this build gets,
  * so the browser is the only available source. It is worth the exposure
  * because the event it could forge is a booking, not the conversion campaigns
@@ -29,7 +29,7 @@ import {
  * The client IP and user agent are read from THIS request's headers, which is
  * the correct source: this is a fetch from the visitor's own browser.
  */
-const ALLOWED: SendableEvent[] = ['ViewContent', 'AddToCart', 'Schedule'];
+const ALLOWED: SendableEvent[] = ['view_content', 'atc_event', 'call_booked'];
 
 /* The reserved segment answers, validated against this list rather than passed
    through, so a renamed form option cannot quietly ship a new string to Meta:
@@ -124,12 +124,12 @@ export async function POST(req: Request) {
        charged on this build, and a zero against a currency is not a truer
        answer than an absence: it is a transaction reported where none
        happened. */
-    /* Only Schedule carries an id, and it is the opaque registration id. */
+    /* Only call_booked carries an id, and it is the opaque registration id. */
     orderId: typeof body.orderId === 'string' ? body.orderId : undefined,
     /* Reserved, and undefined on every event this build sends. */
     occupation,
     /* No content_name, no UTMs, no campaign, no money. custom_data carries an
-       opaque id on Schedule and is empty on the rest. See the classification note at
+       opaque id on call_booked and is empty on the rest. See the classification note at
        the top of lib/meta-capi.ts: this is a domain selling against diabetes,
        fatty liver and thyroid, and custom_data is the surface that gets a
        dataset restricted at the root domain. The UTMs the browser still sends

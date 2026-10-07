@@ -9,7 +9,7 @@ import { captureFbclid } from '@/lib/client-signals';
 /**
  * The Meta pixel base code and the ONE browser-side event we fire: PageView.
  *
- * Everything else (ViewContent, AddToCart, Lead, Schedule) goes server-side
+ * Everything else (view_content, atc_event, lead_registered, call_booked, all custom events because the dataset is Health & Wellness restricted) goes server-side
  * through the Conversions API, so Meta counts one source of truth per event
  * and browser auto-detection cannot inflate it.
  *

@@ -67,53 +67,42 @@ export function originOnly(url: string): string {
 }
 
 /**
- * Meta's standard events. Nothing outside this union is sendable.
+ * The Meta events this build sends. Nothing outside this union is sendable.
  *
- * ── PURCHASE IS GONE ON THIS BUILD, AND THAT IS THE POINT ──────────────
- * Nothing is sold here. The India build's terminal conversion was a captured
- * payment; this funnel's is a REGISTRATION, so `Lead` replaces it, and
- * `Schedule` marks the booking that follows. Both are standard names, so they
- * keep Aggregated Event Measurement priority and every standard-event prior in
- * the ad account, which is exactly why coded custom events were rejected in
- * the note at the top of this file.
+ * ── CUSTOM EVENTS ONLY (2026-10, Health & Wellness restriction) ────────
+ * The dataset is categorised "Health and wellness condition". Meta blocks
+ * mid and lower-funnel STANDARD events by name on such datasets (Lead,
+ * AddToCart, Schedule, ViewContent and friends), while confirmed custom
+ * events with a clean payload keep flowing and optimising. So every event
+ * here is custom, with a neutral name and no descriptive custom_data.
+ * See META_HEALTH_WELLNESS_RESTRICTION_SOP.md.
  *
- * `Lead` is the one to optimise campaigns against. It is the only event on
+ *   ViewContent -> view_content     landing page seen
+ *   AddToCart   -> atc_event        /register arrival
+ *   Lead        -> lead_registered  the registration (optimise against this)
+ *   Schedule    -> call_booked      Cal booking confirmed
+ *
+ * Campaigns optimise directly on `lead_registered`. No Custom Conversion is
+ * needed. Never reintroduce a standard event name, in the browser or on the
+ * server. Only PageView stays, as the pixel's own upper-funnel event.
+ *
+ * `lead_registered` is the one to optimise against. It is the only event on
  * this build that is fired from a server route with the person's own details
  * proven by their submission rather than announced by their browser.
  */
 export type StandardEvent =
-  | 'ViewContent'
-  | 'AddToCart'
-  | 'Lead'
-  | 'Schedule';
+  | 'view_content'
+  | 'atc_event'
+  | 'lead_registered'
+  | 'call_booked';
 
 /**
- * Custom events, kept to a closed union for the same reason the standard ones
- * are: a free-form string is how a health term eventually reaches Meta as an
- * event name, which is the surface that gets a dataset classified.
+ * Further custom events, kept to a closed union: a free-form string is how a
+ * health term eventually reaches Meta as an event name.
  *
- * ── QualifiedLead is WIRED BUT NOT FIRED on this build. ──────────────────
- * The mechanism is complete: the registration route validates the answer and
- * forwards it. What is missing is the client decision it depends on.
- * QualifiedLead is a segment label on an existing step, fired at the same
- * instant as `Lead` for the half of the registrations the client works with
- * most, and NOBODY HAS SAID which half that is for Deepti.
- *
- * A free offer makes this MORE useful than it was on the India build, not
- * less: ninety-seven rupees filtered the list by itself, and nothing filters
- * this one. The filter has to come from a field or from the assessment call.
- *
- * It is still deliberately not invented here, for two reasons. Inventing a
- * qualifying question puts a made-up field on a live form, and the obvious
- * candidates for a metabolic-health offer ("what is your primary concern",
- * "do you have recent blood reports") name a condition in custom_data, which
- * is the exact surface this file exists to keep clean. Occupation is safe but
- * means nothing to this offer.
- *
- * Turning it on later is: add the select to the registration form, pass
- * `occupation` through to /api/register, and nothing else. Known price when
- * you do: one Aggregated Event Measurement slot on iOS, where standard events
- * rank above custom ones.
+ * QualifiedLead is WIRED BUT NOT FIRED on this build (see git history for the
+ * reasoning): it needs a client decision on which segment counts as
+ * qualified. Rename it to a coded name before ever sending it.
  */
 export type CustomEvent = 'QualifiedLead';
 
@@ -255,7 +244,7 @@ export async function sendCapiEvent(params: {
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/v21.0/${params.pixelId}/events?access_token=${params.accessToken}`,
+      `https://graph.facebook.com/v25.0/${params.pixelId}/events?access_token=${params.accessToken}`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },

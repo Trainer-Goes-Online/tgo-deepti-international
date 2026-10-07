@@ -58,7 +58,7 @@ function capi(eventName: string, extra: Record<string, unknown> = {}) {
 /** Landing page: the offer has been seen. Once per SESSION. */
 export function trackViewItem() {
   once('view_item', () => {
-    capi('ViewContent');
+    capi('view_content');
     ga4ViewItem(offer);
   });
 }
@@ -83,7 +83,7 @@ export function trackViewItem() {
  * Meta would collapse into the landing page's own.
  */
 export function trackAddToCart() {
-  capi('AddToCart');
+  capi('atc_event');
   ga4AddToCart(offer);
 }
 
@@ -108,7 +108,7 @@ export function trackBeginCheckout() {
 export function trackBookingConfirmed(leadId: string) {
   const key = leadId || 'anon';
   once(`booking_${key}`, () => {
-    capi('Schedule', { orderId: leadId || undefined });
+    capi('call_booked', { orderId: leadId || undefined });
     ga4BookingConfirmed({ bookingId: key, ...offer });
   });
 }

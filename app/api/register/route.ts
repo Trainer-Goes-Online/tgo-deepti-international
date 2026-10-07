@@ -22,7 +22,7 @@ import {
  * order:
  *   1. validates the submission
  *   2. hands the record to Pabbly, so the person is actually fulfilled
- *   3. sends Meta's `Lead`
+ *   3. sends Meta's `lead_registered` (custom event)
  *   4. sends GA4's `generate_lead`
  *
  * ── WHY PABBLY GOES FIRST ─────────────────────────────────────────────
@@ -36,7 +36,7 @@ import {
  * only place the visitor's own IP and user agent can be read honestly (this is
  * a fetch from their browser, unlike a gateway's webhook), and because a public
  * browser endpoint that accepts a conversion by name is an endpoint anyone can
- * post a fake conversion to. /api/meta/event refuses `Lead` for that reason.
+ * post a fake conversion to. /api/meta/event refuses `lead_registered` for that reason.
  *
  * ── WHAT IT RETURNS ───────────────────────────────────────────────────
  * `{ ok, leadId }`. The browser carries that id to /book-a-call and on to
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
   const eventSourceUrl = FUNNEL_CONFIG.fallbackEventSourceUrl;
   if (!siteUrlReady()) {
     console.error(
-      '[register] NEXT_PUBLIC_SITE_URL is unset, so event_source_url is empty on this Lead',
+      '[register] NEXT_PUBLIC_SITE_URL is unset, so event_source_url is empty on this lead_registered event',
     );
   }
 
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
      Body first, cookie second: the client value is the fresher of the two
      when both exist, and the cookie is the one that survives when the browser
      side fails. */
-  const fbc = truncate(body.fbc) || truncate(readRequestCookie(req, '_fbc'));
+  const fbcCookie = truncate(body.fbc) || truncate(readRequestCookie(req, '_fbc'));
   const fbp = truncate(body.fbp) || truncate(readRequestCookie(req, '_fbp'));
 
   /* The edge copy of the campaign, written by middleware.ts on the very first
@@ -128,6 +128,11 @@ export async function POST(req: Request) {
      a hard 256-character ceiling. This funnel has no gateway and no notes:
      the values go straight to Pabbly, so there is no reason to trim them. */
   const edge = readAttrCookie(readRequestCookie(req, ATTR_COOKIE));
+  /* HYBRID _fbc: cookie first, otherwise rebuilt from the captured fbclid in
+     Meta's own format. _fbc is what ties a conversion to the exact ad click,
+     and the cookie is often absent in iOS and in-app browsers. */
+  const fbclidForFbc = truncate(body.fbclid, 200) || truncate(edge.fbclid, 200);
+  const fbc = fbcCookie || (fbclidForFbc ? `fb.1.${Date.now()}.${fbclidForFbc}` : '');
   const utmOf = (bodyVal: unknown, edgeVal: unknown, max: number) =>
     truncate(bodyVal, max) || truncate(edgeVal, max);
 
@@ -150,7 +155,7 @@ export async function POST(req: Request) {
         externalId,
         eventSourceUrl: eventSourceUrl ? `${eventSourceUrl}/register` : '',
         isTest: isTestMode(),
-        /* The same id sent to Meta as the Lead event_id. */
+        /* The same id sent to Meta as the lead_registered event_id. */
         leadEventId: leadId,
         utmSource: utmOf(utm.source, edge.utmSource, 100),
         utmMedium: utmOf(utm.medium, edge.utmMedium, 100),
@@ -178,7 +183,7 @@ export async function POST(req: Request) {
     ? await sendCapiEvent({
         pixelId: FUNNEL_CONFIG.meta.pixelId,
         accessToken: FUNNEL_CONFIG.meta.accessToken,
-        eventName: 'Lead',
+        eventName: 'lead_registered',
         /* The registration id: unique per person, and stable if this request is
            ever retried, so a retry cannot double-count the lead. */
         eventId: leadId,
@@ -209,7 +214,7 @@ export async function POST(req: Request) {
     : { ok: false, status: 0, body: 'capi-not-configured' };
 
   if (!capiReady()) {
-    console.warn('[register] CAPI not configured, Meta Lead not sent');
+    console.warn('[register] CAPI not configured, Meta lead_registered not sent');
   }
 
   /* ── 3 · GA4. ──────────────────────────────────────────────────────── */
@@ -223,7 +228,7 @@ export async function POST(req: Request) {
     : { ok: false, status: 0 };
 
   console.log(
-    `[register] ${leadId} Lead capi=${capi.ok} ga4=${ga4.ok} pabbly=${pabbly.ok}`,
+    `[register] ${leadId} lead_registered capi=${capi.ok} ga4=${ga4.ok} pabbly=${pabbly.ok}`,
   );
 
   return NextResponse.json({ ok: true, leadId, isTest: isTestMode() });
