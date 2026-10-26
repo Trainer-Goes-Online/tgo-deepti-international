@@ -5,7 +5,7 @@ const ITEMS = [
   'You’re also dealing with **stubborn weight** that isn’t responding the way it used to.',
   'Your **cholesterol, triglycerides, liver enzymes or other metabolic markers** have started moving in the wrong direction.',
   'You’ve tried **dieting, exercising, detoxes or supplements**, but still don’t have a clear plan built around your body and lifestyle.',
-  'You want an approach that accounts for your **digestion, Indian eating patterns, life in the US and health markers**.',
+  'You want an approach that accounts for your **digestion, Indian eating patterns, life in the US & Canada and health markers**.',
   'You want to work on the **bigger metabolic picture**, not chase every concern separately.',
 ];
 

@@ -28,10 +28,10 @@ const FAQS: { q: string; a: string[] }[] = [
     ],
   },
   {
-    q: '4. I live in the US. Will the plan actually fit the way I eat and live here?',
+    q: '4. I live in the US & Canada. Will the plan actually fit the way I eat and live here?',
     a: [
       'Yes.',
-      'Your plan is built around **your food availability, work routine, preferences and lifestyle in the US**, whether you eat mostly Indian food, Western food or a mix of both.',
+      'Your plan is built around **your food availability, work routine, preferences and lifestyle in the US & Canada**, whether you eat mostly Indian food, Western food or a mix of both.',
       'Ayurveda is used as a framework for personalisation, not as a requirement to follow a rigid traditional diet.',
     ],
   },
